@@ -1,0 +1,83 @@
+@model LoanSystem.Web.ViewModels.AdminDashboardViewModel
+
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <h1 class="mb-4">Admin Dashboard</h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h3>User Management</h3>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Email</th>
+                            <th>Full Name</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var user in Model.Users)
+                        {
+                            <tr>
+                                <td>@user.Email</td>
+                                <td>@user.FullName</td>
+                                <td>
+                                    <span class="badge @(user.AccountStatus == "Active" ? "bg-success" : (user.AccountStatus == "Pending" ? "bg-warning" : "bg-danger"))">
+                                        @user.AccountStatus
+                                    </span>
+                                </td>
+                                <td>
+                                    @if (user.AccountStatus == "Pending")
+                                    {
+                                        <form asp-action="ApproveUser" method="post" style="display:inline">
+                                            <input type="hidden" name="userId" value="@user.Id" />
+                                            <button type="submit" class="btn btn-sm btn-success">Approve</button>
+                                        </form>
+                                        <form asp-action="RejectUser" method="post" style="display:inline">
+                                            <input type="hidden" name="userId" value="@user.Id" />
+                                            <button type="submit" class="btn btn-sm btn-danger">Reject</button>
+                                        </form>
+                                    }
+                                    else if (user.AccountStatus == "Active" && !User.Identity.Name.Equals(user.UserName))
+                                    {
+                                         <form asp-action="RejectUser" method="post" style="display:inline">
+                                            <input type="hidden" name="userId" value="@user.Id" />
+                                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to block this user?')">Block</button>
+                                        </form>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h3>Games & Systems</h3>
+            </div>
+            <div class="card-body">
+                <ul class="list-group">
+                    @foreach (var game in Model.Games)
+                    {
+                        <li class="list-group-item">@game</li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
