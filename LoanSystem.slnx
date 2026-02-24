@@ -1,4 +1,3 @@
 <Solution>
-  <Project Path="LoanSystem.Core/LoanSystem.Core.csproj" />
-  <Project Path="LoanSystem.Web/LoanSystem.Web.csproj" />
+  <Project Path="LoanSystem.WinForms/LoanSystem.WinForms.csproj" />
 </Solution>
