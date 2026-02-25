@@ -95,7 +95,7 @@ public void Reject()  { if (!IsAdmin) Status = AccountStatus.Rejected; }
 ```
 
 ### B. Abstraction
-The app abstracts storage operations through `IAppDataStore`, so services do not depend on file/JSON details.
+The app abstracts storage operations through `IAppDataStore`, so services do not depend on SQL Server details.
 
 ```csharp
 public class AuthService
@@ -110,7 +110,7 @@ Polymorphism is applied via interface implementation:
 - `AppDataStore : IAppDataStore`
 - Services call methods through the `IAppDataStore` abstraction.
 
-This enables replacing `AppDataStore` with another implementation (e.g., SQLite) without changing service logic.
+This enables replacing `AppDataStore` with another implementation (e.g., SQL Server) without changing service logic.
 
 ### D. Inheritance
 UI forms reuse framework behavior through inheritance:
