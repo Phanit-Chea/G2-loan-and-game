@@ -171,12 +171,11 @@ namespace LoanSystem.WinForms.Forms
         private void EndGame()
         {
             SyncBoardFromGame();
-            var (score, result) = _game.GetHumanPlayerResult();
 
             var userId = _services.Session.CurrentUser?.Id;
             if (!string.IsNullOrWhiteSpace(userId))
             {
-                _services.GameService.SaveScore(userId, "TicTacToe", score, result);
+                _services.GameService.SaveScore(userId, _game);
             }
         }
 

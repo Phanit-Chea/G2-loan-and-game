@@ -1,21 +1,21 @@
 namespace LoanSystem.WinForms.Domain
 {
-    public class Loan
+    public class Loan : LoanBase
     {
-        public decimal LoanAmount { get; set; }
-        public double InterestRate { get; set; }
-        public int TermYears { get; set; }
-        public int TermMonths { get; set; }
-        public DateTime StartDate { get; set; }
+        public override decimal LoanAmount { get; set; }
+        public override double InterestRate { get; set; }
+        public override int TermYears { get; set; }
+        public override int TermMonths { get; set; }
+        public override DateTime StartDate { get; set; }
         public decimal ExtraMonthlyPayment { get; set; }
         public decimal ExtraYearlyPayment { get; set; }
         public decimal ExtraOneTimePayment { get; set; }
         public DateTime? ExtraOneTimePaymentDate { get; set; }
 
-        public decimal CalculateMonthlyPayment()
+        public override decimal CalculateMonthlyPayment()
         {
-            var monthlyRate = (InterestRate / 100d) / 12d;
-            var totalMonths = (TermYears * 12) + TermMonths;
+            var monthlyRate = MonthlyInterestRate;
+            var totalMonths = TotalMonths;
 
             if (totalMonths <= 0)
             {
@@ -34,13 +34,13 @@ namespace LoanSystem.WinForms.Domain
             return Math.Round((decimal)payment, 2);
         }
 
-        public List<MonthlyAmortizationSchedule> GenerateMonthlySchedule()
+        public override List<MonthlyAmortizationSchedule> GenerateMonthlySchedule()
         {
             var schedule = new List<MonthlyAmortizationSchedule>();
             var balance = LoanAmount;
             var monthlyPayment = CalculateMonthlyPayment();
-            var monthlyRate = (InterestRate / 100d) / 12d;
-            var totalMonths = (TermYears * 12) + TermMonths;
+            var monthlyRate = MonthlyInterestRate;
+            var totalMonths = TotalMonths;
             var currentDate = StartDate;
 
             for (var i = 1; i <= totalMonths; i++)
@@ -92,7 +92,7 @@ namespace LoanSystem.WinForms.Domain
             return schedule;
         }
 
-        public List<AmortizationSchedule> GenerateYearlySchedule()
+        public override List<AmortizationSchedule> GenerateYearlySchedule()
         {
             var monthlySchedule = GenerateMonthlySchedule();
             var yearlySchedule = new List<AmortizationSchedule>();

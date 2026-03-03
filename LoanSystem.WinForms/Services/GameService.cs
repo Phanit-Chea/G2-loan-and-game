@@ -1,5 +1,6 @@
 using LoanSystem.WinForms.Data;
 using LoanSystem.WinForms.Domain;
+using LoanSystem.WinForms.Domain.Games;
 
 namespace LoanSystem.WinForms.Services
 {
@@ -24,6 +25,12 @@ namespace LoanSystem.WinForms.Services
             };
 
             _store.AddGameHistory(history);
+        }
+
+        public void SaveScore(string userId, IGameSession game)
+        {
+            var outcome = game.BuildOutcome();
+            SaveScore(userId, outcome.GameName, outcome.Score, outcome.Result);
         }
     }
 }

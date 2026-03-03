@@ -147,7 +147,7 @@ namespace LoanSystem.WinForms.Forms
             var userId = _services.Session.CurrentUser?.Id;
             if (!string.IsNullOrWhiteSpace(userId))
             {
-                _services.GameService.SaveScore(userId, "CarRacing", _game.Score, $"Score: {_game.Score}");
+                _services.GameService.SaveScore(userId, _game);
             }
 
             MessageBox.Show($"Game Over.\nFinal Score: {_game.Score}", "Car Racing", MessageBoxButtons.OK, MessageBoxIcon.Information);

@@ -14,7 +14,7 @@ namespace LoanSystem.WinForms.Domain.Games
         Draw = 3
     }
 
-    public class TicTacToeGame
+    public class TicTacToeGame : GameSessionBase
     {
         private static readonly int[][] WinConditions =
         {
@@ -25,11 +25,11 @@ namespace LoanSystem.WinForms.Domain.Games
 
         private readonly string[] _board = new string[9];
 
+        public override string GameName => "TicTacToe";
         public IReadOnlyList<string> Board => _board;
         public string CurrentPlayer { get; private set; } = "X";
         public TicTacToeMode Mode { get; private set; } = TicTacToeMode.VsBot;
         public TicTacToeOutcome Outcome { get; private set; } = TicTacToeOutcome.InProgress;
-        public bool IsRunning => Outcome == TicTacToeOutcome.InProgress;
         public bool IsComputerTurn => IsRunning && Mode == TicTacToeMode.VsBot && CurrentPlayer == "O";
 
         public void SetMode(TicTacToeMode mode)
@@ -42,6 +42,8 @@ namespace LoanSystem.WinForms.Domain.Games
             Array.Fill(_board, string.Empty);
             CurrentPlayer = "X";
             Outcome = TicTacToeOutcome.InProgress;
+            Score = 0;
+            IsRunning = true;
         }
 
         public bool TryPlay(int index)
@@ -115,6 +117,13 @@ namespace LoanSystem.WinForms.Domain.Games
             };
         }
 
+        public override GameOutcome BuildOutcome()
+        {
+            var (score, result) = GetHumanPlayerResult();
+            Score = score;
+            return new GameOutcome(GameName, score, result);
+        }
+
         private void EvaluateOutcome()
         {
             var hasWinner = WinConditions.Any(condition =>
@@ -125,13 +134,21 @@ namespace LoanSystem.WinForms.Domain.Games
             if (hasWinner)
             {
                 Outcome = CurrentPlayer == "X" ? TicTacToeOutcome.XWins : TicTacToeOutcome.OWins;
+                FinalizeGame();
                 return;
             }
 
             if (_board.All(x => !string.IsNullOrEmpty(x)))
             {
                 Outcome = TicTacToeOutcome.Draw;
+                FinalizeGame();
             }
+        }
+
+        private void FinalizeGame()
+        {
+            IsRunning = false;
+            Score = GetHumanPlayerResult().Score;
         }
     }
 }

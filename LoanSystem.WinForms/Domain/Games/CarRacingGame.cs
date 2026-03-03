@@ -1,15 +1,14 @@
 namespace LoanSystem.WinForms.Domain.Games
 {
-    public class CarRacingGame
+    public class CarRacingGame : GameSessionBase
     {
         private readonly List<RectangleF> _obstacles = new();
         private readonly List<RectangleF> _coins = new();
 
+        public override string GameName => "CarRacing";
         public RectangleF Player { get; private set; }
         public IReadOnlyList<RectangleF> Obstacles => _obstacles;
         public IReadOnlyList<RectangleF> Coins => _coins;
-        public bool IsRunning { get; private set; }
-        public int Score { get; private set; }
 
         private float _speed;
 
@@ -138,6 +137,11 @@ namespace LoanSystem.WinForms.Domain.Games
                 _coins.RemoveAt(i);
                 Score += 50;
             }
+        }
+
+        public override GameOutcome BuildOutcome()
+        {
+            return new GameOutcome(GameName, Score, $"Score: {Score}");
         }
     }
 }
