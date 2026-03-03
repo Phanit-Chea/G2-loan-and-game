@@ -12,7 +12,7 @@ Single WinForms project:
 
 Layers inside the project:
 - `Domain/` domain models and loan calculations
-- `Data/` local JSON persistence
+- `Data/` SQL Server persistence (`IAppDataStore` + `AppDataStore`)
 - `Security/` password hashing
 - `Services/` business/application services
 - `Forms/` UI forms and navigation flow
@@ -57,8 +57,26 @@ dotnet run --project LoanSystem.WinForms
 
 ## Data Storage
 
-Application data is stored locally in:
+By default, data is stored in SQL Server LocalDB:
 
-`%LOCALAPPDATA%\LoanSystemWinForms\data.json`
+`Server=(localdb)\MSSQLLocalDB;Database=LoanSystemWinForms;Trusted_Connection=True;TrustServerCertificate=True`
 
 This includes users, game history, and loan history.
+
+To use another SQL Server instance, set environment variable:
+
+`LOANSYSTEM_SQLSERVER_CONNECTION`
+
+## Import Database Script
+
+If you want to import a ready schema manually, run:
+
+`Database/LoanSystemWinForms.sql`
+
+It creates:
+- database: `LoanSystemWinForms`
+- tables: `Users`, `GameHistories`, `LoanHistories`
+- indexes used by dashboard history screens
+- default admin account:
+  - Email: `admin@loansystem.com`
+  - Password: `Admin123!`

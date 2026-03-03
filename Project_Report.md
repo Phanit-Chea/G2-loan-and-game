@@ -95,8 +95,7 @@ public void Reject()  { if (!IsAdmin) Status = AccountStatus.Rejected; }
 ```
 
 ### B. Abstraction
-The app abstracts storage operations through `IAppDataStore`, so services do not depend on file/JSON details.
-It also defines abstract domain contracts for loan behavior through `LoanBase`.
+The app abstracts storage operations through `IAppDataStore`, so services do not depend on SQL Server details.
 
 ```csharp
 public class AuthService
@@ -111,7 +110,7 @@ Polymorphism is applied in two places:
 - `AppDataStore : IAppDataStore` for storage abstraction.
 - `GameService.SaveScore(string userId, IGameSession game)` consumes both `TicTacToeGame` and `CarRacingGame` through the same interface and persists outcomes without game-specific branching.
 
-This enables replacing infrastructure and extending gameplay without rewriting calling code.
+This enables replacing `AppDataStore` with another implementation (e.g., SQL Server) without changing service logic.
 
 ### D. Inheritance
 Game domain inheritance:
