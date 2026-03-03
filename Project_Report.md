@@ -96,6 +96,7 @@ public void Reject()  { if (!IsAdmin) Status = AccountStatus.Rejected; }
 
 ### B. Abstraction
 The app abstracts storage operations through `IAppDataStore`, so services do not depend on file/JSON details.
+It also defines abstract domain contracts for loan behavior through `LoanBase`.
 
 ```csharp
 public class AuthService
@@ -106,14 +107,20 @@ public class AuthService
 ```
 
 ### C. Polymorphism
-Polymorphism is applied via interface implementation:
-- `AppDataStore : IAppDataStore`
-- Services call methods through the `IAppDataStore` abstraction.
+Polymorphism is applied in two places:
+- `AppDataStore : IAppDataStore` for storage abstraction.
+- `GameService.SaveScore(string userId, IGameSession game)` consumes both `TicTacToeGame` and `CarRacingGame` through the same interface and persists outcomes without game-specific branching.
 
-This enables replacing `AppDataStore` with another implementation (e.g., SQLite) without changing service logic.
+This enables replacing infrastructure and extending gameplay without rewriting calling code.
 
 ### D. Inheritance
-UI forms reuse framework behavior through inheritance:
+Game domain inheritance:
+- `Loan : LoanBase`
+- `TicTacToeGame : GameSessionBase`
+- `CarRacingGame : GameSessionBase`
+- Shared members (`TotalMonths`, `MonthlyInterestRate`, `GameName`, `Score`, `IsRunning`, `BuildOutcome`) are defined in base classes and specialized per concrete class.
+
+UI forms also reuse framework behavior through inheritance:
 
 ```csharp
 public class LoginForm : Form

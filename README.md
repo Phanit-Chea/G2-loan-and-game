@@ -24,9 +24,13 @@ Layers inside the project:
   - `Domain/Games/TicTacToeGame.cs` and `Domain/Games/CarRacingGame.cs` encapsulate game rules and state transitions.
 - Abstraction:
   - `Data/IAppDataStore.cs` abstracts persistence operations.
-  - Services depend on `IAppDataStore` instead of concrete storage.
-- Inheritance/Extension:
-  - `AppUser` extends behavior through domain methods (`Approve`, `Reject`, `CanLogin`) around role/status.
+  - `Domain/Games/IGameSession` abstracts shared game behaviors.
+  - `Domain/LoanBase.cs` defines an abstract loan contract for calculation behavior.
+- Inheritance:
+  - `Loan` inherits `LoanBase`.
+  - `TicTacToeGame` and `CarRacingGame` inherit `GameSessionBase`.
+- Polymorphism:
+  - `GameService.SaveScore(string userId, IGameSession game)` accepts any game implementation and persists results without game-specific branching.
 - Separation of Concerns:
   - Forms are UI-only orchestration.
   - Services coordinate use-cases.
